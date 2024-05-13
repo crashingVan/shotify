@@ -95,6 +95,7 @@ export function findById(id) {
  * @returns {Promise<Session[]>}
  */
 export function getAll() {
+    
     let tx = db.transaction('session', 'readonly');
 
     tx.onerror = (err) => console.error(err);
