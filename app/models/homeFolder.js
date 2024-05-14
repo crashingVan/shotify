@@ -1,6 +1,7 @@
+import { Folder } from "./folder.js";
 import { Session } from "./session.js";
 
-export class Folder {
+export class HomeFolder {
     /** @type {string} */
     id;
     /** @type {Date} */
@@ -12,14 +13,10 @@ export class Folder {
     /** @type {Folder[]} */
     folders;
 
-    /**
-     * 
-     * @param {string} name 
-     */
-    constructor (name) {
-        this.id = crypto.randomUUID();
+    constructor () {
+        this.id = "home"
         this.date = new Date();
-        this.name = name;
+        this.name = "home";
         this.sessions = [];
         this.folders = [];
     }

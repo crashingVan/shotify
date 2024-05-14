@@ -1,9 +1,7 @@
-import { Session } from "../models/session.js";
-import { drawImage } from "../services/canvas.js";
-import { findById, getAll, initDB, save } from "../services/storage.js";
-import { Screenshot } from "../models/screenshot.js";
-
-initDB();
+import { Session } from "../../models/session.js";
+import { drawImage } from "../../services/canvas.js";
+import { findById, getAll, initDB, saveSession } from "../../services/indexedDb.js";
+import { Screenshot } from "../../models/screenshot.js";
 
 const videoElem = (/** @type {HTMLVideoElement} */ (document.getElementById("video")));
 const startSessionBtn = document.getElementById("start");
@@ -63,7 +61,7 @@ function takeScreenshot() {
 
       sessions[0].screenshots.push(screenshot);
 
-      save(sessions[0]);
+      saveSession(sessions[0]);
     })
   });
 }
