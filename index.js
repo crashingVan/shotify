@@ -1,6 +1,7 @@
-import { createHtmlFolder } from "./app/services/html.js";
+import { addEventListenerSavefolderId, createHtmlFolder } from "./app/services/html.js";
 import { Folder } from "./app/models/folder.js";
-import { createFolder, findCreatedFolderID, initDB, findCurrentFolderById, saveFolder } from "./app/services/indexedDb.js";
+import { createFolder, initDB, findCurrentFolderById, saveFolder } from "./app/services/indexedDb.js";
+import { Session } from "./app/models/session.js";
 
 initDB();
 
@@ -16,14 +17,19 @@ btnCreateSession.addEventListener("click", (e) => {
 btnCreateFolder.addEventListener("click", (e) => {
     //testData
     const testName = "testFolder"
+    const session = new Session("Augenheilkunde1");
+    const folder2 = new Folder ("Doktorarbeit");
 
     const folder = new Folder(testName);
+    folder.folders.push(folder2);
+    folder.sessions.push(session);
+
     createFolder(folder);
     findCurrentFolderById(currentFolderId).then((/** @type {Folder} */ foundFolder) => {
         foundFolder.folders.push(folder);
         saveFolder(foundFolder);
     });
     createHtmlFolder(testName, folder.id);
-
+    addEventListenerSavefolderId(folder.id);
 })
 

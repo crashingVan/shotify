@@ -11,24 +11,23 @@ export function initDB() {
     //request.onsuccess or request.onerror gets activated
     const requestDb = indexedDB.open("shotify", 3);
 
-    //requestDatabase.onsuccess Funktion wird ausgeführt wenn event eintritt und in {} steht was ausgeführt wird
-    requestDb.onsuccess = (event) => {
-        // @ts-ignore
-        db = event.target.result;
-
-        const tx = db.transaction('folder', 'readonly');
-        const txObjectStore = tx.objectStore('folder');
-        const txRequest = txObjectStore.get("home");
-
-        txRequest.onsuccess = (e) => {
-            //@ts-ignore
-            if (e.target.result == null) {
-                const homeFolder = new HomeFolder()
-                createFolder(homeFolder);
+    return new Promise ((resolve) => {
+        requestDb.onsuccess = (event) => {
+            // @ts-ignore
+            db = event.target.result;
+            resolve (db);
+            const tx = db.transaction('folder', 'readonly');
+            const txObjectStore = tx.objectStore('folder');
+            const txRequest = txObjectStore.get("home");
+    
+            txRequest.onsuccess = (e) => {
+                //@ts-ignore
+                if (e.target.result == null) {
+                    const homeFolder = new HomeFolder()
+                    createFolder(homeFolder);
+                }
             }
-        }
-    }
-
+        }    
     //open objectstore through request.onupgradeneeded
     // THROUGH request.onupgradeneeded is the ONLY way to alter the structure of the database
     requestDb.onupgradeneeded = (event) => {
@@ -60,6 +59,8 @@ export function initDB() {
         }
     }
 
+    })
+   
 
 
 }
