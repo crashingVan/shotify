@@ -1,7 +1,7 @@
-import { addEventListenerSavefolderId, createHtmlFolder } from "./app/services/html.js";
-import { Folder } from "./app/models/folder.js";
-import { createFolder, initDB, findCurrentFolderById, saveFolder } from "./app/services/indexedDb.js";
-import { Session } from "./app/models/session.js";
+import { addEventListenerSavefolderId, createHtmlFolder } from "../app/services/html.js";
+import { Folder } from "../app/models/folder.js";
+import { createFolder, initDB, findFolderById, saveFolder } from "../app/services/indexedDb.js";
+import { Session } from "../app/models/session.js";
 
 initDB();
 
@@ -25,7 +25,7 @@ btnCreateFolder.addEventListener("click", (e) => {
     folder.sessions.push(session);
 
     createFolder(folder);
-    findCurrentFolderById(currentFolderId).then((/** @type {Folder} */ foundFolder) => {
+    findFolderById(currentFolderId).then((/** @type {Folder} */ foundFolder) => {
         foundFolder.folders.push(folder);
         saveFolder(foundFolder);
     });

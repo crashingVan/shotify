@@ -11,16 +11,20 @@ export class Folder {
     sessions;
     /** @type {Folder[]} */
     folders;
+     /** @type {string} */
+     folderLocation;
 
     /**
      * 
      * @param {string} name 
+     * @param {string} location
      */
-    constructor (name) {
+    constructor (name, location) {
         this.id = crypto.randomUUID();
         this.date = new Date();
         this.name = name;
         this.sessions = [];
         this.folders = [];
+        this.folderLocation = location;
     }
 }

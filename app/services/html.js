@@ -11,7 +11,7 @@ import { saveFolderId } from "./localStorage.js";
  * @param {string} id
  */
 export function createHtmlFolder(name, id) {
-    const folderPfad = "/app/views/folder/folder.html";
+    const folderPfad = "/";
 
     const btnFolder = document.createElement('button');
     btnFolder.textContent = name
@@ -23,6 +23,7 @@ export function createHtmlFolder(name, id) {
     folder.insertAdjacentElement("afterbegin", btnFolder);
 
     document.body.appendChild(folder);
+    addEventListenerSavefolderId(btnFolder.id);
 }
 
 export function createHtmlSession(name, id) {
@@ -42,13 +43,13 @@ export function createHtmlSession(name, id) {
 
 /**
  * 
- * @param {string} folderId 
+ * @param {string} btnFolderId
  */
-export function addEventListenerSavefolderId(folderId){
-    const btnFolder = document.getElementById(folderId);
+function addEventListenerSavefolderId(btnFolderId){
+    const btnFolder = document.getElementById(btnFolderId);
     btnFolder.addEventListener('click', (e) => {
         console.log("hallo");
-        saveFolderId(folderId);
+        saveFolderId(btnFolderId);
     })
 }
 

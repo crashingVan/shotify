@@ -9,7 +9,7 @@ export function initDB() {
     //open returns IDBopenRequest which results in failure or success
     //if success or failure, "success" event or "failure"event gets fired with requestDatabse as the target
     //request.onsuccess or request.onerror gets activated
-    const requestDb = indexedDB.open("shotify", 3);
+    const requestDb = indexedDB.open("shotify", 4);
 
     return new Promise ((resolve) => {
         requestDb.onsuccess = (event) => {
@@ -134,22 +134,33 @@ export function findCreatedFolderID() {
 
 /**
  * 
- * @param {string} currentFolderId
+ * @param {string} folderId
  */
-export function findCurrentFolderById(currentFolderId){
+export function findFolderById(folderId){
     const tx = db.transaction('folder', 'readonly');
     const txObjectStore = tx.objectStore('folder');
-    const txRequest = txObjectStore.get(currentFolderId)
+    const txRequest = txObjectStore.get(folderId)
 
     return new Promise ((resolve, reject) => {
         //@ts-ignore
         txRequest.onsuccess = (e) => resolve(e.target.result);
         txRequest.onerror = (e) => reject(e);
     })
+}
 
-
-
-
+/**
+ * 
+ * @param {string} folder
+ */
+export function findFolderLocation(folder){
+    const tx = db.transaction('folder', 'readonly');
+    const txObjectStore = tx.objectStore('folder');
+    const txIndex = txObjectStore.index('folderFoldersId')
+    
+    const keyRequest = txIndex.getKey(folder);
+    keyRequest.onsuccess = (e) => {
+        console.log(e);
+    }
 }
 
 /**
