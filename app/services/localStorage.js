@@ -8,12 +8,16 @@ export function saveFolderId(id) {
     localStorage.setItem("folderId", id)
 }
 
-export function rmFolderIdFromLocalStorage() {
-    localStorage.removeItem("folderId");
+/**
+ * 
+ * @param {string} id 
+ */
+export function saveSessionId(id) {
+    localStorage.setItem("SessionId", id)
 }
 
 export function initLocalStorage() {
-    if (localStorage.getItem("folderId") == 'undefined') {
+    if (localStorage.getItem("folderId") == null) {
         localStorage.setItem("folderId", "home");
         return "home";
     }

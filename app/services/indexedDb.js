@@ -11,23 +11,6 @@ export function initDB() {
     //request.onsuccess or request.onerror gets activated
     const requestDb = indexedDB.open("shotify", 4);
 
-    return new Promise ((resolve) => {
-        requestDb.onsuccess = (event) => {
-            // @ts-ignore
-            db = event.target.result;
-            resolve (db);
-            const tx = db.transaction('folder', 'readonly');
-            const txObjectStore = tx.objectStore('folder');
-            const txRequest = txObjectStore.get("home");
-    
-            txRequest.onsuccess = (e) => {
-                //@ts-ignore
-                if (e.target.result == null) {
-                    const homeFolder = new HomeFolder()
-                    createFolder(homeFolder);
-                }
-            }
-        }    
     //open objectstore through request.onupgradeneeded
     // THROUGH request.onupgradeneeded is the ONLY way to alter the structure of the database
     requestDb.onupgradeneeded = (event) => {
@@ -59,10 +42,24 @@ export function initDB() {
         }
     }
 
+    return new Promise((resolve) => {
+        requestDb.onsuccess = (event) => {
+            // @ts-ignore
+            db = event.target.result;
+            resolve(db);
+            const tx = db.transaction('folder', 'readonly');
+            const txObjectStore = tx.objectStore('folder');
+            const txRequest = txObjectStore.get("home");
+
+            txRequest.onsuccess = (e) => {
+                //@ts-ignore
+                if (e.target.result == null) {
+                    const homeFolder = new HomeFolder()
+                    createFolder(homeFolder);
+                }
+            }
+        }
     })
-   
-
-
 }
 
 /**
@@ -118,6 +115,7 @@ export function createFolder(folder) {
     };
 }
 
+
 export function findCreatedFolderID() {
     const tx = db.transaction('folder', 'readwrite');
     const txObjectStore = tx.objectStore('folder');
@@ -136,12 +134,12 @@ export function findCreatedFolderID() {
  * 
  * @param {string} folderId
  */
-export function findFolderById(folderId){
+export function findFolderById(folderId) {
     const tx = db.transaction('folder', 'readonly');
     const txObjectStore = tx.objectStore('folder');
     const txRequest = txObjectStore.get(folderId)
 
-    return new Promise ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         //@ts-ignore
         txRequest.onsuccess = (e) => resolve(e.target.result);
         txRequest.onerror = (e) => reject(e);
@@ -152,15 +150,35 @@ export function findFolderById(folderId){
  * 
  * @param {string} folder
  */
-export function findFolderLocation(folder){
+export function findFolderLocation(folder) {
     const tx = db.transaction('folder', 'readonly');
     const txObjectStore = tx.objectStore('folder');
     const txIndex = txObjectStore.index('folderFoldersId')
-    
+
     const keyRequest = txIndex.getKey(folder);
     keyRequest.onsuccess = (e) => {
         console.log(e);
     }
+}
+
+/**
+ * 
+ * @param {Folder} currentFolder 
+ * @param {Folder} folder 
+ */
+export function saveFolderinCurrentFolder (currentFolder, folder){
+        currentFolder.folders.push(folder);
+        saveFolder(currentFolder);;
+}
+
+/**
+ * 
+ * @param {Folder} currentFolder 
+ * @param {Session} session 
+ */
+export function saveSessioninCurrentFolder(currentFolder, session){
+        currentFolder.sessions.push(session);
+        saveFolder(currentFolder);
 }
 
 /**

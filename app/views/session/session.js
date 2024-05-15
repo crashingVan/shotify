@@ -9,9 +9,14 @@ const stopSessionBtn = document.getElementById("stop");
 const screenshotBtn = document.getElementById("screenshot");
 const screenshotCanvas = document.getElementById("canvasScreenshot");
 const showObjectStoreBtn = document.getElementById("showObjectStoreBtn");
+const backBtn = document.getElementById("backBtn")
 
 /** @type {MediaStream} */
 let mediaStream;
+let db;
+
+initDB().then((database) => { db = database });
+
 
 // Set event listeners for the start and stop buttons
 startSessionBtn.addEventListener("click", startCapture);
@@ -58,7 +63,6 @@ function takeScreenshot() {
   new ImageCapture(track).grabFrame().then((/** @type {ImageBitmap} */ imageBitmap) => {
     getAll().then(sessions => {
       const screenshot = new Screenshot(imageBitmap);
-
       sessions[0].screenshots.push(screenshot);
 
       saveSession(sessions[0]);

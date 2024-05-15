@@ -23,11 +23,16 @@ export function createHtmlFolder(name, id) {
     folder.insertAdjacentElement("afterbegin", btnFolder);
 
     document.body.appendChild(folder);
-    addEventListenerSavefolderId(btnFolder.id);
+    return folder;
 }
 
+/**
+ * 
+ * @param {string} name 
+ * @param {string} id 
+ */
 export function createHtmlSession(name, id) {
-    const folderPfad = "/app/views/folder/folder.html";
+    const folderPfad = "/app/views/session/session.html";
 
     const btnSession = document.createElement('button');
     btnSession.textContent = name
@@ -43,13 +48,12 @@ export function createHtmlSession(name, id) {
 
 /**
  * 
- * @param {string} btnFolderId
+ * @param {Folder} folder
  */
-function addEventListenerSavefolderId(btnFolderId){
-    const btnFolder = document.getElementById(btnFolderId);
+export function addEventListenerSavefolderId(folder) {
+    const btnFolder = document.getElementById(folder.id);
     btnFolder.addEventListener('click', (e) => {
-        console.log("hallo");
-        saveFolderId(btnFolderId);
+        saveFolderId(folder.id);
     })
 }
 
@@ -60,5 +64,60 @@ function addEventListenerSavefolderId(btnFolderId){
  */
 export function createFolderSessionView(folders, sessions) {
     folders.map((folder) => createHtmlFolder(folder.name, folder.id));
-    sessions.map((session) => createHtmlSession (session.name, session.id));
+    sessions.map((session) => createHtmlSession(session.name, session.id));
+}
+
+export function createTextField() {
+    const textField = document.createElement('input');
+    textField.type = "text";
+    textField.id = "textField";
+    textField.placeholder = "name";
+    document.body.appendChild(textField);
+    return textField;
+
+}
+
+/**
+ * 
+ * @param {HTMLInputElement} textField 
+ */
+export function addEventListenerReadInput(textField) {
+    return new Promise((resolve) => {
+        textField.addEventListener("change", (e) => {
+            //@ts-ignore
+            console.log(document.getElementById(textField.id).value);
+            //@ts-ignore
+            resolve(document.getElementById(textField.id).value);
+        }
+        )
+    })
+}
+
+/**
+ * 
+ * @param {HTMLInputElement} textField 
+ */
+export function removeTextField(textField) {
+    textField.remove();
+}
+
+/**
+ * 
+ * @param {string} folderTitle 
+ */
+export function createTitle(folderTitle) {
+    const title = document.createElement('h1')
+    title.textContent = folderTitle;
+    document.body.appendChild(title);
+}
+
+/**
+ * 
+ * @param {String} folderId 
+ * @param {HTMLElement} button 
+ */
+export function rmBackBtnIfHome(folderId, button) {
+    if (folderId == "home") {
+        button.remove()
+    }
 }
