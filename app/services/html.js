@@ -2,18 +2,17 @@ import { Session } from "../models/session.js";
 import { Folder } from "../models/folder.js";
 import { saveFolderId, saveSessionId } from "./localStorage.js";
 import { Screenshot } from "../models/screenshot.js";
-import { drawImage } from "./canvas.js";
+import { calcBitmapWidthHeightRatio, drawImage } from "./canvas.js";
 
-const bigScreenshotWidth = "1000px";
-const bigScreenshotHeight = "900px";
+const bigScreenshotHeight = 1000;
 const smallVideoWidth = "400px";
 const smallVideoHeight = "250px";
 const bigVideoWidth = "1000px";
 const bigVideoHeight = "900px";
 
 
-const bigScreenshotWidthNumber = 1000;
-const bigScreenshotHeightNumber = 900;
+const bigScreenshotWidthNumber = 2580;
+const bigScreenshotHeightNumber = 1536;
 
 
 
@@ -154,12 +153,14 @@ function addEventListenerSavefolderId(folderId) {
  * @param {string} screenshotId
  * @param {HTMLDivElement} previewDiv
  */
-export function loadScreenshot(bitmap,bitmapWidth, bitmapHeight, screenshotId, previewDiv) {
+export function loadScreenshot(bitmap, screenshotId, previewDiv) {
     const canvas = document.createElement('canvas');
     canvas.id = screenshotId;
-    setElementSize(canvas, bigScreenshotWidth, bigScreenshotHeight)
-    previewDiv.insertAdjacentElement("afterbegin", canvas);
-    drawImage(bitmap, canvas, bitmapWidth, bitmapHeight, bigScreenshotWidthNumber, bigScreenshotHeightNumber);
+    const bigScreenshotWidth = calcBitmapWidthHeightRatio(bitmap.width, bitmap.height)*bigScreenshotHeight
+    setElementSize(canvas, `${bigScreenshotWidth}`, `${bigScreenshotHeight}`)
+    
+    //previewDiv.insertAdjacentElement("afterbegin", canvas);
+    drawImage(bitmap, canvas, bitmap.width, bitmap.height, bigScreenshotWidth, bigScreenshotHeight);
     document.body.appendChild(canvas);
 }
 
