@@ -3,9 +3,11 @@ export class Screenshot {
     date;
     /** @type {ImageBitmap} */
     bitmap;
-
-    constructor(bitmap){
+    /** @type {string} */
+    id;
+    constructor(bitmap) {
         this.date = new Date();
         this.bitmap = bitmap;
+        this.id = crypto.randomUUID();
     }
 }

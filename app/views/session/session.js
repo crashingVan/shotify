@@ -1,28 +1,39 @@
 import { Session } from "../../models/session.js";
 import { drawImage } from "../../services/canvas.js";
-import { findById, getAll, initDB, saveSession } from "../../services/indexedDb.js";
+import { findSessionById, getAll, initDB, saveSession } from "../../services/indexedDb.js";
 import { Screenshot } from "../../models/screenshot.js";
+import { createSessionView, createTitle, loadScreenshot, videoMainView, videoPreview } from "../../services/html.js";
 
 const videoElem = (/** @type {HTMLVideoElement} */ (document.getElementById("video")));
 const startSessionBtn = document.getElementById("start");
 const stopSessionBtn = document.getElementById("stop");
 const screenshotBtn = document.getElementById("screenshot");
-const screenshotCanvas = document.getElementById("canvasScreenshot");
-const showObjectStoreBtn = document.getElementById("showObjectStoreBtn");
-const backBtn = document.getElementById("backBtn")
+const backToLivestreamBtn = document.getElementById("backToLivestream");
+const currentSessionId = localStorage.getItem('sessionId');
+const preview = (/**@type {HTMLDivElement} */ (document.getElementById("preview")));
 
 /** @type {MediaStream} */
 let mediaStream;
+/** @type {IDBDatabase} */
 let db;
+/** @type {Session} */
+let currentSession;
 
-initDB().then((database) => { db = database });
+initDB().then((database) => { db = database 
+findSessionById(currentSessionId).then((session) => {
+  currentSession = session
+  createTitle(session.name);
+  createSessionView(currentSession.screenshots, preview)
+})
+});
 
 
 // Set event listeners for the start and stop buttons
 startSessionBtn.addEventListener("click", startCapture);
 stopSessionBtn.addEventListener("click", stopCapture);
 screenshotBtn.addEventListener("click", takeScreenshot);
-showObjectStoreBtn.addEventListener("click", loadScreenshot);
+backToLivestreamBtn.addEventListener("click", videoMainElementView);
+
 
 async function startCapture() {
   try {
@@ -61,17 +72,20 @@ function takeScreenshot() {
   let track = mediaStream.getVideoTracks()[0];
   // @ts-ignore
   new ImageCapture(track).grabFrame().then((/** @type {ImageBitmap} */ imageBitmap) => {
-    getAll().then(sessions => {
+    findSessionById(currentSessionId).then(session => {
+      console.log(imageBitmap.width, imageBitmap.height);
+      //reSizeImageImageBitmap(imageBitmap); //TO-DO
       const screenshot = new Screenshot(imageBitmap);
-      sessions[0].screenshots.push(screenshot);
-
-      saveSession(sessions[0]);
+      session.screenshots.push(screenshot);
+      loadScreenshot(imageBitmap, imageBitmap.width, imageBitmap.height, screenshot.id, preview);
+      videoPreview();
+      saveSession(session);
+      //growScreenshot(screenshot.id);
     })
-  });
+  }); 
 }
 
-function loadScreenshot() {
-  findById("33d1790d-76d4-4aab-abd7-9a37d1d9fb35").then(session => {
-    drawImage(session.screenshots[1].bitmap, screenshotCanvas);
-  })
+
+function videoMainElementView() {
+  videoMainView();
 }

@@ -62,44 +62,6 @@ export function initDB() {
     })
 }
 
-/**
- * @param {Session} session 
- */
-export function createSession(session) {
-    let tx = db.transaction('session', 'readwrite');
-    let txObjectStore = tx.objectStore('session');
-    let txRequest = txObjectStore.add(session);
-
-    txRequest.onerror = (e) => {
-        console.error(`Error on save session: ${e}`);
-    };
-}
-
-/**
- * @param {Session} session 
- */
-export function saveSession(session) {
-    let tx = db.transaction('session', 'readwrite');
-    let txObjectStore = tx.objectStore('session');
-    let txRequest = txObjectStore.put(session);
-
-    txRequest.onerror = (e) => {
-        console.error(`Error on save session: ${e}`);
-    };
-}
-
-/**
- * @param {Folder} folder 
- */
-export function saveFolder(folder) {
-    let tx = db.transaction('folder', 'readwrite');
-    let txObjectStore = tx.objectStore('folder');
-    let txRequest = txObjectStore.put(folder);
-
-    txRequest.onerror = (e) => {
-        console.error(`Error on save session: ${e}`);
-    };
-}
 
 /**
  * 
@@ -115,19 +77,27 @@ export function createFolder(folder) {
     };
 }
 
+/**
+ * 
+ * @param {Folder} currentFolder 
+ * @param {Folder} folder 
+ */
+export function saveFolderinCurrentFolder(currentFolder, folder) {
+    currentFolder.folders.push(folder);
+    saveFolder(currentFolder);;
+}
 
-export function findCreatedFolderID() {
-    const tx = db.transaction('folder', 'readwrite');
-    const txObjectStore = tx.objectStore('folder');
-    const index = txObjectStore.index('folderName');
-    const cursorRequest = index.openCursor(null, 'prev');
+/**
+ * @param {Folder} folder 
+ */
+export function saveFolder(folder) {
+    let tx = db.transaction('folder', 'readwrite');
+    let txObjectStore = tx.objectStore('folder');
+    let txRequest = txObjectStore.put(folder);
 
-    cursorRequest.onsuccess = (e) => {
-        //@ts-ignore
-        console.log(e.target.result);
-        // @ts-ignore
-        return e.target.result.id
-    }
+    txRequest.onerror = (e) => {
+        console.error(`Error on save session: ${e}`);
+    };
 }
 
 /**
@@ -161,14 +131,18 @@ export function findFolderLocation(folder) {
     }
 }
 
+
 /**
- * 
- * @param {Folder} currentFolder 
- * @param {Folder} folder 
+ * @param {Session} session 
  */
-export function saveFolderinCurrentFolder (currentFolder, folder){
-        currentFolder.folders.push(folder);
-        saveFolder(currentFolder);;
+export function createSession(session) {
+    let tx = db.transaction('session', 'readwrite');
+    let txObjectStore = tx.objectStore('session');
+    let txRequest = txObjectStore.add(session);
+
+    txRequest.onerror = (e) => {
+        console.error(`Error on save session: ${e}`);
+    };
 }
 
 /**
@@ -176,9 +150,22 @@ export function saveFolderinCurrentFolder (currentFolder, folder){
  * @param {Folder} currentFolder 
  * @param {Session} session 
  */
-export function saveSessioninCurrentFolder(currentFolder, session){
-        currentFolder.sessions.push(session);
-        saveFolder(currentFolder);
+export function saveSessioninCurrentFolder(currentFolder, session) {
+    currentFolder.sessions.push(session);
+    saveFolder(currentFolder);
+}
+
+/**
+ * @param {Session} session 
+ */
+export function saveSession(session) {
+    let tx = db.transaction('session', 'readwrite');
+    let txObjectStore = tx.objectStore('session');
+    let txRequest = txObjectStore.put(session);
+
+    txRequest.onerror = (e) => {
+        console.error(`Error on save session: ${e}`);
+    };
 }
 
 /**
@@ -186,26 +173,22 @@ export function saveSessioninCurrentFolder(currentFolder, session){
  * @param {string} id 
  * @returns {Promise<Session>}
  */
-export function findById(id) {
+export function findSessionById(id) {
     let tx = db.transaction('session', 'readonly');
-
-    tx.onerror = (err) => console.error(err);
-
     let txObjectStore = tx.objectStore('session');
-    //get() gives Object, getAll() gives Array -> has to get mapped before access attributes of ones objects
-    let txRequest = txObjectStore.get(id);
+    let txRequest = txObjectStore.get(id); //get() gives Object, getAll() gives Array -> has to get mapped before access attributes of ones objects
 
     return new Promise((resolve, reject) => {
         txRequest.onsuccess = (e) => {
             // @ts-ignore
             resolve(e.target.result);
         }
-
         txRequest.onerror = (e) => {
             reject(e);
         }
     });
 }
+
 
 /**
  * @returns {Promise<Session[]>}
@@ -230,4 +213,14 @@ export function getAll() {
             reject(e);
         }
     });
+}
+
+export function getSessionById (sessionId) {
+
+}
+
+
+//für wenn es nicht der aktuell gemachte Screenshot ist, sondern zb wenn man sich die folien wieder anguckt
+export function getScreenshotById(){
+
 }

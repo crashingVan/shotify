@@ -1,6 +1,6 @@
 import { Session } from "./app/models/session.js";
 import { Folder } from "./app/models/folder.js";
-import { addEventListenerReadInput, addEventListenerSavefolderId as addEventListenerSaveFolderId, createFolderSessionView, createHtmlFolder, createTextField, createTitle, removeTextField, rmBackBtnIfHome } from "./app/services/html.js";
+import { addEventListenerReadInput, addEventListenerReadInput as addEventListenerSaveFolderId, createFolderView, createHtmlFolder, createHtmlSession, createTextField, createTitle, removeTextField, rmBackBtnIfHome } from "./app/services/html.js";
 import { createFolder, createSession, findFolderById, initDB, saveFolder, saveFolderinCurrentFolder, saveSessioninCurrentFolder } from "./app/services/indexedDb.js";
 import { initLocalStorage, saveSessionId } from "./app/services/localStorage.js";
 
@@ -19,11 +19,10 @@ initDB().then((/**@type {IDBDatabase}*/ database) => {
     db = database
     findFolderById(currentFolderId).then((/** @type {Folder} */ foundFolder) => {
         currentFolder = foundFolder;
-        createFolderSessionView(currentFolder.folders, currentFolder.sessions)
+        createFolderView(currentFolder.folders, currentFolder.sessions)
         console.log(currentFolder.name);
         createTitle(currentFolder.name);
         rmBackBtnIfHome(currentFolder.id, backBtn);
-
     })
 })
 console.log("this folder:", currentFolderId);
@@ -38,6 +37,7 @@ createSessionBtn.addEventListener("click", (e) => {
         createSession(session);
         saveSessionId(session.id);
         saveSessioninCurrentFolder(currentFolder, session);
+        createHtmlSession(name, session.id);
     })
 })
 
@@ -50,10 +50,8 @@ createFolderBtn.addEventListener("click", (e) => {
         createFolder(folder);
         saveFolderinCurrentFolder(currentFolder, folder);
         createHtmlFolder(name, folder.id);
-        addEventListenerSaveFolderId(folder);
     });
 })
-
 
 backBtn.addEventListener("click", (e) => {
     localStorage.setItem("folderId", currentFolder.folderLocation)
