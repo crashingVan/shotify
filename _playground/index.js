@@ -1,4 +1,5 @@
-import { addEventListenerSavefolderId, createHtmlFolder } from "../app/services/html.js";
+import { addEventListenerSavefolderId } from "app/services/createElement.js";
+import { createHtmlFolder } from "app/services/createElement.js";
 import { Folder } from "../app/models/folder.js";
 import { createFolder, initDB, findFolderById, saveFolder } from "../app/services/indexedDb.js";
 import { Session } from "../app/models/session.js";

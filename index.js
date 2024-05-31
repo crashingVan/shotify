@@ -1,7 +1,8 @@
 import { Session } from "./app/models/session.js";
 import { Folder } from "./app/models/folder.js";
-import { addEventListenerReadInput, addEventListenerReadInput as addEventListenerSaveFolderId, createFolderView, createHtmlFolder, createHtmlSession, createTextField, createTitle, removeTextField, rmBackBtnIfHome } from "./app/services/html.js";
-import { createFolder, createSession, findFolderById, initDB, saveFolder, saveFolderinCurrentFolder, saveSessioninCurrentFolder } from "./app/services/indexedDb.js";
+import { btnsView, createFolderView, createSideBar, createTitle } from "./app/services/htmlView.js";
+import { removeTextField, addEventListenerReadInput, createHtmlFolder, createHtmlSession, createTextField} from "./app/services/htmlElement.js";
+import { createFolder, createSession, findFolderById, initDB, saveFolderinCurrentFolder, saveSessioninCurrentFolder } from "./app/services/indexedDb.js";
 import { initLocalStorage, saveSessionId } from "./app/services/localStorage.js";
 
 /** @type {IDBDatabase} */
@@ -22,10 +23,12 @@ initDB().then((/**@type {IDBDatabase}*/ database) => {
         createFolderView(currentFolder.folders, currentFolder.sessions)
         console.log(currentFolder.name);
         createTitle(currentFolder.name);
-        rmBackBtnIfHome(currentFolder.id, backBtn);
+        btnsView(currentFolder.id, backBtn);
+        createSideBar(currentFolder);
     })
 })
 console.log("this folder:", currentFolderId);
+
 
 
 createSessionBtn.addEventListener("click", (e) => {

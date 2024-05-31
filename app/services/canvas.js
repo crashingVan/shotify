@@ -11,12 +11,3 @@ export function drawImage(image, canvas, scWidht, scHeight, canvasWidth, canvasH
     canvas.getContext("2d").drawImage(image, 0, 0, scWidht, scHeight, 0, 0, canvasWidth, canvasHeight);
 }
 
-/**
- * 
- * @param {number} imageBitmapWidth 
- * @param {number} imageBitmapHeight 
- */
-export function calcBitmapWidthHeightRatio (imageBitmapWidth, imageBitmapHeight) {
-    const ratio = imageBitmapWidth/imageBitmapHeight;
-    return ratio
-}

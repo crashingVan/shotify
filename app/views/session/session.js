@@ -2,7 +2,9 @@ import { Session } from "../../models/session.js";
 import { drawImage } from "../../services/canvas.js";
 import { findSessionById, getAll, initDB, saveSession } from "../../services/indexedDb.js";
 import { Screenshot } from "../../models/screenshot.js";
-import { createSessionView, createTitle, loadScreenshot, videoMainView, videoPreview } from "../../services/html.js";
+import { createSessionView, createTitle } from "../../services/htmlView.js";
+import { videoMainView, videoPreview } from "app/services/htmlElement.js";
+import { loadScreenshot } from "../../services/htmlElement.js";
 
 const videoElem = (/** @type {HTMLVideoElement} */ (document.getElementById("video")));
 const startSessionBtn = document.getElementById("start");
@@ -26,7 +28,6 @@ findSessionById(currentSessionId).then((session) => {
   createSessionView(currentSession.screenshots, preview)
 })
 });
-
 
 // Set event listeners for the start and stop buttons
 startSessionBtn.addEventListener("click", startCapture);
@@ -69,6 +70,9 @@ async function stopCapture() {
 }
 
 function takeScreenshot() {
+  //const zoom = chrome.tabs.getZoom();
+  //zoom().then((e) => console.log(e));
+  
   let track = mediaStream.getVideoTracks()[0];
   // @ts-ignore
   new ImageCapture(track).grabFrame().then((/** @type {ImageBitmap} */ imageBitmap) => {
@@ -77,10 +81,9 @@ function takeScreenshot() {
       //reSizeImageImageBitmap(imageBitmap); //TO-DO
       const screenshot = new Screenshot(imageBitmap);
       session.screenshots.push(screenshot);
-      loadScreenshot(imageBitmap, imageBitmap.width, imageBitmap.height, screenshot.id, preview);
+      loadScreenshot(imageBitmap, screenshot.id, preview);
       videoPreview();
       saveSession(session);
-      //growScreenshot(screenshot.id);
     })
   }); 
 }
