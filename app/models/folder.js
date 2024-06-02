@@ -12,7 +12,7 @@ export class Folder {
     /** @type {Folder[]} */
     folders;
      /** @type {string} */
-     folderLocation;
+     parentFolder;
 
     /**
      * 
@@ -20,11 +20,12 @@ export class Folder {
      * @param {string} location
      */
     constructor (name, location) {
-        this.id = crypto.randomUUID();
+        this.id = "f" + crypto.randomUUID();
         this.date = new Date();
         this.name = name;
         this.sessions = [];
         this.folders = [];
-        this.folderLocation = location;
+        this.parentFolder = location;
     }
 }
+

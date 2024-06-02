@@ -94,7 +94,6 @@ export function saveFolder(folder) {
     let tx = db.transaction('folder', 'readwrite');
     let txObjectStore = tx.objectStore('folder');
     let txRequest = txObjectStore.put(folder);
-
     txRequest.onerror = (e) => {
         console.error(`Error on save session: ${e}`);
     };
@@ -126,9 +125,6 @@ export function findFolderLocation(folder) {
     const txIndex = txObjectStore.index('folderFoldersId')
 
     const keyRequest = txIndex.getKey(folder);
-    keyRequest.onsuccess = (e) => {
-        console.log(e);
-    }
 }
 
 

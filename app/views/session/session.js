@@ -3,7 +3,7 @@ import { drawImage } from "../../services/canvas.js";
 import { findSessionById, getAll, initDB, saveSession } from "../../services/indexedDb.js";
 import { Screenshot } from "../../models/screenshot.js";
 import { createSessionView, createTitle } from "../../services/htmlView.js";
-import { videoMainView, videoPreview } from "app/services/htmlElement.js";
+import { videoMainView, videoPreview } from "../../services/htmlElement.js";
 import { loadScreenshot } from "../../services/htmlElement.js";
 
 const videoElem = (/** @type {HTMLVideoElement} */ (document.getElementById("video")));

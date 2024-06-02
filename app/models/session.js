@@ -1,3 +1,4 @@
+import { Folder } from "./folder.js";
 import { Screenshot } from "./screenshot.js";
 
 export class Session {
@@ -9,14 +10,17 @@ export class Session {
     date;
     /** @type {Screenshot[]} */
     screenshots;
+    /** @type {Folder} */
+    parentFolder
 
     /**
      * @param {string} name 
      */
-    constructor(name) {
-        this.id = crypto.randomUUID();
+    constructor(name, parent) {
+        this.id = "s" + crypto.randomUUID();
         this.name = name;
         this.date = new Date();
         this.screenshots = [];
+        this.parentFolder = parent
     }
 }

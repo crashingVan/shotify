@@ -21,6 +21,6 @@ export class HomeFolder {
         this.name = "home";
         this.sessions = [];
         this.folders = [];
-        this.folderLocation = "";
+        this.parentFolder = "home";
     }
 }

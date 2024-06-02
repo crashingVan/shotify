@@ -1,3 +1,5 @@
+import { Session } from "../models/session.js";
+import { Folder } from "../models/folder.js";
 import { calcScreenshotWidthHeight } from "./calc.js";
 import { drawImage } from "./canvas.js";
 import { saveSessionId, saveFolderId } from "./localStorage.js";
@@ -13,6 +15,7 @@ export var bigVideoHeight = "800px";
  * @param {string} id
  */
 export function createHtmlSession(name, id) {
+    const iconSpace = document.getElementById("iconSpace")
     const folderPfad = "/app/views/session/session.html";
 
     const btnSession = document.createElement('button');
@@ -24,7 +27,7 @@ export function createHtmlSession(name, id) {
     session.id = id;
     session.insertAdjacentElement("afterbegin", btnSession);
 
-    document.body.appendChild(session);
+    iconSpace.appendChild(session);
     btnSession.addEventListener('click', (e) => {
         saveSessionId(session.id);
     });
@@ -46,6 +49,7 @@ export function createTextField() {
  * @param {string} id
  */
 export function createHtmlFolder(name, id) {
+    const iconSpace = document.getElementById("iconSpace")
     const folderPfad = "/";
 
     const btnFolder = document.createElement('button');
@@ -57,11 +61,11 @@ export function createHtmlFolder(name, id) {
     folder.id = id;
     folder.insertAdjacentElement("afterbegin", btnFolder);
 
-    document.body.appendChild(folder);
+    iconSpace.appendChild(folder);
     btnFolder.addEventListener('click', (e) => {
         saveFolderId(folder.id)
-    });    
-        return folder;
+    });
+    return folder;
 }
 
 /**
@@ -71,8 +75,6 @@ export function createHtmlFolder(name, id) {
 export function addEventListenerReadInput(textField) {
     return new Promise((resolve) => {
         textField.addEventListener("change", (e) => {
-            //@ts-ignore
-            console.log(document.getElementById(textField.id).value);
             //@ts-ignore
             resolve(document.getElementById(textField.id).value);
         }
@@ -88,16 +90,13 @@ export function addEventListenerReadInput(textField) {
  * @param {HTMLDivElement} previewDiv
  */
 export function loadScreenshot(bitmap, screenshotId, previewDiv) {
-    console.log(visualViewport.height);
-    console.log(window.innerHeight);
-
     const canvas = document.createElement('canvas');
     canvas.id = screenshotId;
 
 
     //canvas.classList.add("screen");
     // const bigScreenshotWidth = calcBitmapWidthHeightRatio(bitmap.width, bitmap.height)*bigScreenshotHeight
-   const {width, height} = calcScreenshotWidthHeight(bitmap);
+    const { width, height } = calcScreenshotWidthHeight(bitmap);
     setElementSize(canvas, `${width}`, `${height}`);
     drawImage(bitmap, canvas, bitmap.width, bitmap.height, canvas.width, canvas.height);
     //document.body.appendChild(canvas);
@@ -152,4 +151,52 @@ export function setElementSize(element, width, height) {
     element.setAttribute("width", width);
     element.setAttribute("height", height);
 }
+
+/**
+ * 
+ * @param {Folder|Session} element 
+ */
+export function createSidebarElement(element) {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.querySelector("#"+ element.id) == null) {
+        var padding = 20;
+
+        const div = document.createElement('div');
+        const toggelBtn = document.createElement('button');
+        const elementBtn = document.createElement('button');
+        const folderLink = document.createElement('a');
+
+if (element.id.charAt(0) == "f") {
+    folderLink.href = "/";
+}
+else {
+    folderLink.href = "/app/views/session/session.html"
+    elementBtn.addEventListener('click', (e) => {
+        saveSessionId(element.id);
+    });
+}
+      
+        elementBtn.textContent = element.name;
+        elementBtn.id = element.id;
+
+        toggelBtn.id = element.id
+        div.id = element.id
+        div.style.paddingLeft = `${padding}`+ "px";
+        
+        elementBtn.addEventListener("click", (e) => saveFolderId(element.id))
+
+        folderLink.appendChild(elementBtn)
+        div.appendChild(toggelBtn);
+        div.appendChild(folderLink);
+      
+        const parent = sidebar.querySelector("#"+element.parentFolder);
+        sidebar.appendChild(div);
+
+        if(parent != null) {
+           parent.appendChild(div);
+        }
+       
+    }
+}
+
 
