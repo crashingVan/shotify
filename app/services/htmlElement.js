@@ -13,21 +13,31 @@ export var bigVideoHeight = "800px";
  *
  * @param {string} name
  * @param {string} id
+ * @param {HTMLElement} parentElement
  */
-export function createHtmlSession(name, id) {
-    const iconSpace = document.getElementById("iconSpace")
+export function createHtmlSession(name, id, parentElement) {
+    const divFolderName = document.createElement('div');
     const folderPfad = "/app/views/session/session.html";
 
     const btnSession = document.createElement('button');
-    btnSession.textContent = name;
     btnSession.id = id;
+    btnSession.classList.add("fa-solid", "fa-file", "iconSpaceIcon");
 
     const session = document.createElement('a');
     session.href = folderPfad;
     session.id = id;
     session.insertAdjacentElement("afterbegin", btnSession);
 
-    iconSpace.appendChild(session);
+
+    const nameBtn = document.createElement('button');
+    nameBtn.textContent = name;
+    nameBtn.classList.add("nameBtn");
+
+    divFolderName.classList.add('iconName')
+    divFolderName.appendChild(btnSession);
+    divFolderName.appendChild(nameBtn)
+
+    parentElement.appendChild(divFolderName);
     btnSession.addEventListener('click', (e) => {
         saveSessionId(session.id);
     });
@@ -48,25 +58,46 @@ export function createTextField() {
  * @param {string} name
  * @param {string} id
  */
-export function createHtmlFolder(name, id) {
-    const iconSpace = document.getElementById("iconSpace")
+export function createHtmlFolder(name, id, parentElement) {
+    const divFolderName = document.createElement('div');
     const folderPfad = "/";
 
     const btnFolder = document.createElement('button');
-    btnFolder.textContent = name;
     btnFolder.id = id;
+
+    const nameBtn = document.createElement('button');
+    nameBtn.textContent = name;
+    nameBtn.classList.add("nameBtn");
 
     const folder = document.createElement('a');
     folder.href = folderPfad;
     folder.id = id;
+    btnFolder.classList.add("fa-regular", "fa-folder", "iconSpaceIcon")
     folder.insertAdjacentElement("afterbegin", btnFolder);
 
-    iconSpace.appendChild(folder);
+    divFolderName.classList.add('iconName')
+
+    divFolderName.appendChild(folder);
+    divFolderName.appendChild(nameBtn);
+    parentElement.appendChild(divFolderName);
+
     btnFolder.addEventListener('click', (e) => {
         saveFolderId(folder.id)
     });
     return folder;
 }
+
+
+
+/**
+ * 
+ * @param {HTMLElement} element 
+ * @param {HTMLElement} parent 
+ */
+export function appendElementTo(element, parent) {
+    parent.appendChild(element);
+}
+
 
 /**
  *
@@ -158,44 +189,52 @@ export function setElementSize(element, width, height) {
  */
 export function createSidebarElement(element) {
     const sidebar = document.getElementById('sidebar');
-    if (sidebar.querySelector("#"+ element.id) == null) {
+    if (sidebar.querySelector("#" + element.id) == null) {
         var padding = 20;
 
         const div = document.createElement('div');
         const toggelBtn = document.createElement('button');
         const elementBtn = document.createElement('button');
         const folderLink = document.createElement('a');
+        const nameBtn = document.createElement('button');
 
-if (element.id.charAt(0) == "f") {
-    folderLink.href = "/";
-}
-else {
-    folderLink.href = "/app/views/session/session.html"
-    elementBtn.addEventListener('click', (e) => {
-        saveSessionId(element.id);
-    });
-}
-      
-        elementBtn.textContent = element.name;
+
+        if (element.id.charAt(0) == "f" || element.id.charAt(0) == "h") {
+            folderLink.href = "/";
+            elementBtn.classList.add("fa-regular", "fa-folder", "sidebarIcon")
+
+        }
+        else {
+            folderLink.href = "/app/views/session/session.html"
+            elementBtn.classList.add("fa-solid", "fa-file", "sidebarIcon");
+            elementBtn.addEventListener('click', (e) => {
+                saveSessionId(element.id);
+            });
+        }
+
+        nameBtn.textContent = element.name;
+        nameBtn.classList.add("nameBtn")
+
         elementBtn.id = element.id;
 
         toggelBtn.id = element.id
         div.id = element.id
-        div.style.paddingLeft = `${padding}`+ "px";
-        
+        div.style.paddingLeft = `${padding}` + "px";
+
         elementBtn.addEventListener("click", (e) => saveFolderId(element.id))
 
         folderLink.appendChild(elementBtn)
         div.appendChild(toggelBtn);
         div.appendChild(folderLink);
-      
-        const parent = sidebar.querySelector("#"+element.parentFolder);
+        div.appendChild(nameBtn);
+
+        const parent = sidebar.querySelector("#" + element.parentFolder);
         sidebar.appendChild(div);
 
-        if(parent != null) {
-           parent.appendChild(div);
+        if (parent != null) {
+            parent.appendChild(div);
         }
-       
+
     }
 }
 

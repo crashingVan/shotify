@@ -23,8 +23,8 @@ export var bigVideoHeight = "800px";
  * @param {Session[]} sessions
  */
 export function createFolderView(folders, sessions) {
-    folders.map((folder) => createHtmlFolder(folder.name, folder.id));
-    sessions.map((session) => createHtmlSession(session.name, session.id));
+    folders.map((folder) => createHtmlFolder(folder.name, folder.id, document.getElementById("iconSpace")));
+    sessions.map((session) => createHtmlSession(session.name, session.id, document.getElementById("iconSpace")));
 }
 
 /**

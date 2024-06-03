@@ -2026,16 +2026,22 @@ body {
     width: 15%;
     min-width: 200px;
     height: 100%;
-    background-color: #009688;
+    background-color: rgb(242, 242, 246);
     flex-flow: column;
+
 }
 
+
 .iconSpace {
+    display: flex;
+    flex-wrap: wrap;
     height: 100%;
+    width: 400px;
     float: right;
     flex: 1;
-    background-color:rgba(0, 0, 0, 0.19);
+    background-color: rgb(250, 250, 252);
 }
+
 
 .title {
     margin: 0;
@@ -2043,4 +2049,44 @@ body {
 
 .hide {
     display: none;
+}
+
+.iconName {
+    display: flex;
+    flex-flow: column;
+    height: 100px;
+    width: 100px;
+    text-align: center;
+    margin: 15px;
+
+}
+
+.iconSpaceIcon {
+    background-color: transparent;
+    border: none;
+    color: black;
+    padding: 0;
+    font-size: 80px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.sidebarIcon {
+    background-color: transparent;
+    border: none;
+    color: black;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+}
+
+
+.nameBtn {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    font-size: 20px;
+    text-align: center;
+
 }

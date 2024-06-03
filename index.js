@@ -42,7 +42,7 @@ createSessionBtn.addEventListener("click", (e) => {
         removeTextField(textField);
         createSession(session);
         saveSessioninCurrentFolder(currentFolder, session);
-        createHtmlSession(name, session.id);
+        createHtmlSession(name, session.id, document.getElementById("iconSpace"));
         findFolderById("home").then((folder)=>createSidebar(folder));
     })
 })
@@ -55,7 +55,7 @@ createFolderBtn.addEventListener("click", (e) => {
         removeTextField(textField);
         createFolder(folder);
         saveFolderinCurrentFolder(currentFolder, folder);
-        createHtmlFolder(name, folder.id);
+        createHtmlFolder(name, folder.id, document.getElementById("iconSpace"));
         findFolderById("home").then((folder)=>createSidebar(folder));
     });
 })
