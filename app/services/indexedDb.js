@@ -55,27 +55,13 @@ export function initDB() {
                 //@ts-ignore
                 if (e.target.result == null) {
                     const homeFolder = new HomeFolder()
-                    createFolder(homeFolder);
+                    saveFolder(homeFolder);
                 }
             }
         }
     })
 }
 
-
-/**
- * 
- * @param {Folder} folder 
- */
-export function createFolder(folder) {
-    let tx = db.transaction('folder', 'readwrite');
-    let txObjectStore = tx.objectStore('folder');
-    let txRequest = txObjectStore.put(folder);
-
-    txRequest.onerror = (e) => {
-        console.error(`Error on save session: ${e}`);
-    };
-}
 
 /**
  * 
@@ -131,10 +117,10 @@ export function findFolderLocation(folder) {
 /**
  * @param {Session} session 
  */
-export function createSession(session) {
+export function saveSession(session) {
     let tx = db.transaction('session', 'readwrite');
     let txObjectStore = tx.objectStore('session');
-    let txRequest = txObjectStore.add(session);
+    let txRequest = txObjectStore.put(session);
 
     txRequest.onerror = (e) => {
         console.error(`Error on save session: ${e}`);
@@ -151,18 +137,7 @@ export function saveSessioninCurrentFolder(currentFolder, session) {
     saveFolder(currentFolder);
 }
 
-/**
- * @param {Session} session 
- */
-export function saveSession(session) {
-    let tx = db.transaction('session', 'readwrite');
-    let txObjectStore = tx.objectStore('session');
-    let txRequest = txObjectStore.put(session);
 
-    txRequest.onerror = (e) => {
-        console.error(`Error on save session: ${e}`);
-    };
-}
 
 /**
  * 

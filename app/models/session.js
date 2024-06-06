@@ -10,17 +10,21 @@ export class Session {
     date;
     /** @type {Screenshot[]} */
     screenshots;
-    /** @type {Folder} */
-    parentFolder
+    /** @type {string} */
+    parentFolderId;
+    /** @type {string} */
+    objectType;
 
     /**
      * @param {string} name 
+     * @param {string} parentId
      */
-    constructor(name, parent) {
+    constructor(name, parentId) {
         this.id = "s" + crypto.randomUUID();
         this.name = name;
         this.date = new Date();
         this.screenshots = [];
-        this.parentFolder = parent
+        this.parentFolder = parentId;
+        this.objectType = "session";
     }
 }

@@ -14,6 +14,8 @@ export class HomeFolder {
     folders;
     /** @type {string} */
     folderLocation;
+    /** @type {string} */
+    objectType;
 
     constructor () {
         this.id = "home"
@@ -22,5 +24,6 @@ export class HomeFolder {
         this.sessions = [];
         this.folders = [];
         this.parentFolder = "home";
+        this.objectType = "folder"
     }
 }

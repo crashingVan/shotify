@@ -2016,10 +2016,12 @@ body {
 }
 
 .header {
-
+    display: flex;
+    flex-wrap: flex;
     width: 100%;
-    height: 7%;
+    height: 70px;
     top: 0px;
+    background-color: rgb(185, 185, 255);
 }
 
 .sidebar {
@@ -2045,13 +2047,14 @@ body {
 
 .title {
     margin: 0;
+    text-align: center;
 }
 
 .hide {
     display: none;
 }
 
-.iconName {
+.foldericonSpaceFolderAndName {
     display: flex;
     flex-flow: column;
     height: 100px;
@@ -2060,8 +2063,7 @@ body {
     margin: 15px;
 
 }
-
-.iconSpaceIcon {
+.foldericonSpaceIcon {
     background-color: transparent;
     border: none;
     color: black;
@@ -2070,8 +2072,42 @@ body {
     cursor: pointer;
     text-align: center;
 }
+.foldericonSpaceNameBtn {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    font-size: 20px;
+    text-align: center;
+}
 
-.sidebarIcon {
+.sessioniconSpaceFolderAndName {
+    display: flex;
+    flex-flow: column;
+    height: 100px;
+    width: 100px;
+    text-align: center;
+    margin: 15px;
+
+}
+.sessioniconSpaceIcon {
+    background-color: transparent;
+    border: none;
+    color: black;
+    padding: 0;
+    font-size: 80px;
+    cursor: pointer;
+    text-align: center;
+}
+.sessioniconSpaceNameBtn {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    font-size: 20px;
+    text-align: center;
+}
+
+
+.foldersidebarIcon {
     background-color: transparent;
     border: none;
     color: black;
@@ -2081,12 +2117,29 @@ body {
     text-align: center;
 }
 
-
-.nameBtn {
+.sessionsidebarIcon {
+    background-color: transparent;
+    border: none;
+    color: black;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+}
+.sidebarNameBtn {
     background-color: transparent;
     padding: 0;
     border: none;
     font-size: 20px;
     text-align: center;
+}
+
+.addBtn {
+    align-self:baseline;
+    background: transparent;
+    border: none;
+    font-size: 80px;
+    cursor: pointer;
+    margin: 15px;
 
 }

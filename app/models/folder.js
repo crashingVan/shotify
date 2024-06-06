@@ -13,6 +13,8 @@ export class Folder {
     folders;
      /** @type {string} */
      parentFolder;
+     /** @type {string}  */
+     objectType
 
     /**
      * 
@@ -26,6 +28,7 @@ export class Folder {
         this.sessions = [];
         this.folders = [];
         this.parentFolder = location;
+        this.objectType = "folder"
     }
 }
 

@@ -1,10 +1,13 @@
+console.log("hallo");
+
 import { Session } from "../../models/session.js";
 import { drawImage } from "../../services/canvas.js";
 import { findSessionById, getAll, initDB, saveSession } from "../../services/indexedDb.js";
 import { Screenshot } from "../../models/screenshot.js";
 import { createSessionView, createTitle } from "../../services/htmlView.js";
-import { videoMainView, videoPreview } from "../../services/htmlElement.js";
-import { loadScreenshot } from "../../services/htmlElement.js";
+import { videoMainView, videoPreview } from "app/services/canvas.js";
+import { loadScreenshot } from "app/services/canvas.js";
+import { saveFolderId } from "../../services/localStorage.js";
 
 const videoElem = (/** @type {HTMLVideoElement} */ (document.getElementById("video")));
 const startSessionBtn = document.getElementById("start");
@@ -13,6 +16,7 @@ const screenshotBtn = document.getElementById("screenshot");
 const backToLivestreamBtn = document.getElementById("backToLivestream");
 const currentSessionId = localStorage.getItem('sessionId');
 const preview = (/**@type {HTMLDivElement} */ (document.getElementById("preview")));
+const backBtn = document.getElementById("goBack");
 
 /** @type {MediaStream} */
 let mediaStream;
@@ -20,13 +24,17 @@ let mediaStream;
 let db;
 /** @type {Session} */
 let currentSession;
+console.log("halloinitdb");
 
-initDB().then((database) => { db = database 
-findSessionById(currentSessionId).then((session) => {
-  currentSession = session
-  createTitle(session.name);
-  createSessionView(currentSession.screenshots, preview)
-})
+initDB().then((database) => {
+  db = database
+  findSessionById(currentSessionId).then((session) => {
+    console.log("session",session);
+    currentSession = session
+    createTitle(session.name);
+    createSessionView(currentSession.screenshots, preview)
+
+  })
 });
 
 // Set event listeners for the start and stop buttons
@@ -34,6 +42,11 @@ startSessionBtn.addEventListener("click", startCapture);
 stopSessionBtn.addEventListener("click", stopCapture);
 screenshotBtn.addEventListener("click", takeScreenshot);
 backToLivestreamBtn.addEventListener("click", videoMainElementView);
+backBtn.addEventListener("click", (e) => backToFolder())
+
+function backToFolder() {
+  saveFolderId(currentSession.parentFolder);
+}
 
 
 async function startCapture() {
@@ -72,12 +85,11 @@ async function stopCapture() {
 function takeScreenshot() {
   //const zoom = chrome.tabs.getZoom();
   //zoom().then((e) => console.log(e));
-  
+
   let track = mediaStream.getVideoTracks()[0];
   // @ts-ignore
   new ImageCapture(track).grabFrame().then((/** @type {ImageBitmap} */ imageBitmap) => {
     findSessionById(currentSessionId).then(session => {
-      console.log(imageBitmap.width, imageBitmap.height);
       //reSizeImageImageBitmap(imageBitmap); //TO-DO
       const screenshot = new Screenshot(imageBitmap);
       session.screenshots.push(screenshot);
@@ -85,7 +97,7 @@ function takeScreenshot() {
       videoPreview();
       saveSession(session);
     })
-  }); 
+  });
 }
 
 

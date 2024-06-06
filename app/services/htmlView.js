@@ -2,8 +2,10 @@ import { Session } from "../models/session.js";
 import { Folder } from "../models/folder.js";
 import { saveFolderId } from "./localStorage.js";
 import { Screenshot } from "../models/screenshot.js";
-import { createHtmlFolder, loadScreenshot, createHtmlSession, rmBackBtnIfHome, createSidebarElement } from "./htmlElement.js";
+import { rmBackBtnIfHome, createSidebarElement, createFolder, createSession } from "./htmlElement.js";
+import { loadScreenshot } from "./canvas.js";
 import { findFolderById } from "./indexedDb.js";
+import { HomeFolder } from "../models/homeFolder.js";
 
 
 export var bigScreenshotWidth;
@@ -21,10 +23,13 @@ export var bigVideoHeight = "800px";
  * 
  * @param {Folder[]} folders
  * @param {Session[]} sessions
+ * @param {string} pfadFolder
+ * @param {string} pfadSession
+ * 
  */
-export function createFolderView(folders, sessions) {
-    folders.map((folder) => createHtmlFolder(folder.name, folder.id, document.getElementById("iconSpace")));
-    sessions.map((session) => createHtmlSession(session.name, session.id, document.getElementById("iconSpace")));
+export function createFolderView(folders, sessions, pfadFolder, pfadSession) {
+    folders.map((folder) => createFolder(folder.name, folder.id, pfadFolder, document.getElementById("iconSpace"), folder.objectType, "iconSpace"));
+    sessions.map((session) => createSession(session.name, session.id, pfadSession, document.getElementById("iconSpace"), session.objectType, "iconSpace"));
 }
 
 /**
@@ -38,22 +43,21 @@ export function createSessionView(screenshots, previewDiv) {
 
 /**
  * 
- * @param {Folder} folder
+ * @param {Folder|HomeFolder} folder
  */
 export function createSidebar(folder) {
-    var i = 0;
     createSidebarElement(folder);
-    goIntoFolder(folder, i);
+    goIntoFolder(folder);
 
 }
 
 /**
  * 
  * @param {Folder} folder 
- * @param {number} i 
  */
 function goIntoFolder(folder) {
-    findFolderById(folder.id).then((folder) => {;
+    findFolderById(folder.id).then((folder) => {
+        ;
         folder.folders.map((folder) => {
             createSidebarElement(folder);
             goIntoFolder(folder);
@@ -75,7 +79,7 @@ function test() {
 
         console.log("folderfound", folder);
         console.log("testFolder Length", folder.folders.length);
-        goIntoFolder(folder, i)
+        goIntoFolder(folder)
     });
 }
 
@@ -89,15 +93,15 @@ export function createTitle(title) {
     const header = document.getElementById("header");
     titleElement.textContent = title;
 
-    header.classList.add("title");
+    titleElement.classList.add("title");
     header.appendChild(titleElement);
 }
 
 /**
  * 
  * @param {string} folderID
- * @param {HTMLElement} btn 
+ * @param {HTMLElement} backBtn 
  */
-export function btnsView(folderID, btn) {
-    rmBackBtnIfHome(folderID, btn)
+export function btnsView(folderID, backBtn, addBtn) {
+    rmBackBtnIfHome(folderID, backBtn);
 }
