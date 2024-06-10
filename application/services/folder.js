@@ -1,16 +1,14 @@
-import { currentFolderId, currentFolder, folderPfad, iconSpaceStyle } from "../../init.js";
-
 import { Folder } from "../../domain/models/folder.js";
 import { saveFolder, saveFolderinCurrentFolder } from "../../infrastructure/db/folderDb.js";
-import { createTextField, addEventListenerReadInput, removeTextField, rmCreateFolderSessionBtn, loadFolder } from "./htmlElement.js";
 
 /**
  * 
  * @param {string} input 
+ * @param {Folder} currentFolder
  */
-export function createNewFolder(input) {
+export function createNewFolder(input, currentFolder) {
         const name = input;
-        const folder = new Folder(name, currentFolderId);
+        const folder = new Folder(name, currentFolder.id);
         saveFolder(folder);
         saveFolderinCurrentFolder(currentFolder, folder);
         return folder;

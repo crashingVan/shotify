@@ -1,4 +1,3 @@
-console.log("hallo");
 
 import { Session } from "../../../domain/models/session.js";
 import { getAll, initDB } from "../../../infrastructure/db/initIndexedDb.js";
@@ -24,12 +23,10 @@ let mediaStream;
 let db;
 /** @type {Session} */
 let currentSession;
-console.log("halloinitdb");
 
 initDB().then((database) => {
   db = database
   findSessionById(currentSessionId).then((session) => {
-    console.log("session", session);
     currentSession = session
     loadTitle(session.name);
     loadPreview(currentSession.screenshots, preview)

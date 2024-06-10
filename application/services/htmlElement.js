@@ -3,9 +3,7 @@ import { Folder } from "../../domain/models/folder.js";
 import { saveSessionId, saveFolderId } from "./localStorage.js";
 import { putObjectInParent, createDivWith2Objects, createDivWith2ObjectsInParent } from "./htmlDivCreator.js";
 import { goToFolder, goToSession } from "./navigator.js";
-import { currentFolderId } from "../../init.js";
 import { findFolderById } from "../../infrastructure/db/folderDb.js";
-import { HomeFolder } from "../../domain/models/homeFolder.js";
 
 export var smallVideoWidth = "200px";
 export var smallVideoHeight = "200px";

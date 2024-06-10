@@ -1,8 +1,59 @@
-import { addEventListenerReadInput, createSessionFolderBtns, createTextField, loadFolder, loadSession, loadSidebar, removeTextField, rmCreateFolderSessionBtn } from "../application/services/htmlElement.js";
+import { addEventListenerReadInput, createSessionFolderBtns, createTextField, loadFolder, loadFoldersAndSessions, loadSession, loadSidebar, loadTitle, removeTextField, rmBackBtnIfHome, rmCreateFolderSessionBtn } from "../application/services/htmlElement.js";
 import { createNewFolder } from "../application/services/folder.js";
 import { createNewSession } from "../application/services/session.js";
 import { goBack } from "../application/services/navigator.js";
-import { folderPfad, iconSpaceStyle } from "../init.js";
+import { getCurrentFolderId } from "../application/services/localStorage.js";
+import { initDB } from "../infrastructure/db/initIndexedDb.js";
+import { findFolderById } from "../infrastructure/db/folderDb.js";
+import { HomeFolder } from "../domain/models/homeFolder.js";
+import { Folder } from "../domain/models/folder.js";
+
+
+/** @type {IDBDatabase} */
+let db;
+/**@type {string} */
+ let currentFolderId;
+/**@type {Folder} */
+ let currentFolder;
+/** @type {HomeFolder} */
+ let homeFolder;
+
+ const folderPfad = "/";
+ const sessionPfad = "/application/views/session/session.html";
+ const iconSpaceStyle = "iconSpace"
+ const sidebarStyle = "sidebar"
+ var bigScreenshotWidth;
+ var bigScreenshotHeight;
+ var smallVideoWidth = "200px";
+ var smallVideoHeight = "200px";
+ var bigVideoWidth = "800px";
+ var bigVideoHeight = "800px";
+
+
+
+window.onpageshow = () => {
+    currentFolderId = getCurrentFolderId();
+
+    initDB().then((/**@type {IDBDatabase}*/ database) => {
+        db = database
+        findFolderById("home").then((/** @type {HomeFolder} */foundHomeFolder) => {
+            homeFolder = foundHomeFolder;
+            loadSidebar();
+        })
+        findFolderById(currentFolderId).then((/** @type {Folder} */ foundFolder) => {
+            currentFolder = foundFolder;
+            console.log("current Folder ", currentFolder);
+            initInterface();
+        })
+    })
+}
+
+ function initInterface() {
+    rmBackBtnIfHome(currentFolder.id, backBtn);
+    loadTitle(currentFolder.name);
+    loadFoldersAndSessions(currentFolder, folderPfad, sessionPfad);
+    loadSidebar();
+}
 
 
 export const backBtn = document.getElementById("goBack");
@@ -10,13 +61,7 @@ const addBtn = document.getElementById("addBtn");
 const iconSpace = document.getElementById("iconSpace");
 const addBtnParent = document.getElementById("addBtnDiv");
 
-export var bigScreenshotWidth;
-export var bigScreenshotHeight;
 
-export var smallVideoWidth = "200px";
-export var smallVideoHeight = "200px";
-export var bigVideoWidth = "800px";
-export var bigVideoHeight = "800px";
 
 addBtn.addEventListener("click", (e) => {
     if (addBtnParent.querySelector("#createSessionBtn") == null) {
@@ -34,7 +79,7 @@ addBtn.addEventListener("click", (e) => {
             /** @type {HTMLInputElement} */
             const textField = createTextField();
             addEventListenerReadInput(textField).then((input) => {
-                const session = createNewSession(input)
+                const session = createNewSession(input, currentFolder)
                 removeTextField(textField);
                 rmCreateFolderSessionBtn(createSessionBtn, createFolderBtn);
                 loadSidebar()
@@ -46,7 +91,7 @@ addBtn.addEventListener("click", (e) => {
             /** @type {HTMLInputElement} */
             const textField = createTextField();
             addEventListenerReadInput(textField).then((input) => {
-                const folder = createNewFolder(input)
+                const folder = createNewFolder(input,currentFolder)
                 removeTextField(textField);
                 rmCreateFolderSessionBtn(createSessionBtn, createFolderBtn);
                 loadSidebar()
@@ -59,7 +104,7 @@ addBtn.addEventListener("click", (e) => {
 });
 
 backBtn.addEventListener("click", (e) => {
-    goBack();
+    goBack(currentFolder);
 })
 
 

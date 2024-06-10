@@ -1,4 +1,4 @@
-import { currentFolder } from "../../init.js";
+import { Folder } from "../../domain/models/folder.js";
 
 
 
@@ -17,6 +17,10 @@ export function goToSession(sessionDestination) {
     localStorage.setItem("sessionId", sessionDestination);
 }
 
-export function goBack() {
+/**
+ * 
+ * @param {Folder} currentFolder 
+ */
+export function goBack(currentFolder) {
     localStorage.setItem("folderId", currentFolder.parentFolder)
 }
