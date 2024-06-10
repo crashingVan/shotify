@@ -1,9 +1,10 @@
-import { HomeFolder } from "../models/homeFolder.js";
-import { Folder } from "../models/folder.js";
-import { Session } from "../models/session.js";
+import { HomeFolder } from "../../domain/models/homeFolder.js";
+import { Folder } from "../../domain/models/folder.js";
+import { Session } from "../../domain/models/session.js";
+import { saveFolder } from "./folderDb.js";
 
 /** @type {IDBDatabase} */
-let db;
+export let db;
 
 export function initDB() {
     //open returns IDBopenRequest which results in failure or success
@@ -64,104 +65,6 @@ export function initDB() {
 
 
 /**
- * 
- * @param {Folder} currentFolder 
- * @param {Folder} folder 
- */
-export function saveFolderinCurrentFolder(currentFolder, folder) {
-    currentFolder.folders.push(folder);
-    saveFolder(currentFolder);;
-}
-
-/**
- * @param {Folder} folder 
- */
-export function saveFolder(folder) {
-    let tx = db.transaction('folder', 'readwrite');
-    let txObjectStore = tx.objectStore('folder');
-    let txRequest = txObjectStore.put(folder);
-    txRequest.onerror = (e) => {
-        console.error(`Error on save session: ${e}`);
-    };
-}
-
-/**
- * 
- * @param {string} folderId
- */
-export function findFolderById(folderId) {
-    const tx = db.transaction('folder', 'readonly');
-    const txObjectStore = tx.objectStore('folder');
-    const txRequest = txObjectStore.get(folderId)
-
-    return new Promise((resolve, reject) => {
-        //@ts-ignore
-        txRequest.onsuccess = (e) => resolve(e.target.result);
-        txRequest.onerror = (e) => reject(e);
-    })
-}
-
-/**
- * 
- * @param {string} folder
- */
-export function findFolderLocation(folder) {
-    const tx = db.transaction('folder', 'readonly');
-    const txObjectStore = tx.objectStore('folder');
-    const txIndex = txObjectStore.index('folderFoldersId')
-
-    const keyRequest = txIndex.getKey(folder);
-}
-
-
-/**
- * @param {Session} session 
- */
-export function saveSession(session) {
-    let tx = db.transaction('session', 'readwrite');
-    let txObjectStore = tx.objectStore('session');
-    let txRequest = txObjectStore.put(session);
-
-    txRequest.onerror = (e) => {
-        console.error(`Error on save session: ${e}`);
-    };
-}
-
-/**
- * 
- * @param {Folder} currentFolder 
- * @param {Session} session 
- */
-export function saveSessioninCurrentFolder(currentFolder, session) {
-    currentFolder.sessions.push(session);
-    saveFolder(currentFolder);
-}
-
-
-
-/**
- * 
- * @param {string} id 
- * @returns {Promise<Session>}
- */
-export function findSessionById(id) {
-    let tx = db.transaction('session', 'readonly');
-    let txObjectStore = tx.objectStore('session');
-    let txRequest = txObjectStore.get(id); //get() gives Object, getAll() gives Array -> has to get mapped before access attributes of ones objects
-
-    return new Promise((resolve, reject) => {
-        txRequest.onsuccess = (e) => {
-            // @ts-ignore
-            resolve(e.target.result);
-        }
-        txRequest.onerror = (e) => {
-            reject(e);
-        }
-    });
-}
-
-
-/**
  * @returns {Promise<Session[]>}
  */
 export function getAll() {
@@ -186,12 +89,3 @@ export function getAll() {
     });
 }
 
-export function getSessionById (sessionId) {
-
-}
-
-
-//für wenn es nicht der aktuell gemachte Screenshot ist, sondern zb wenn man sich die folien wieder anguckt
-export function getScreenshotById(){
-
-}

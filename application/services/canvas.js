@@ -1,4 +1,5 @@
 
+import { Screenshot } from "../../domain/models/screenshot.js";
 import { calcScreenshotWidthHeight } from "./calc.js";
 import { smallVideoWidth, smallVideoHeight, bigVideoWidth, bigVideoHeight } from "./htmlElement.js";
 
@@ -55,5 +56,13 @@ export function videoMainView() {
 export function setElementSize(element, width, height) {
     element.setAttribute("width", width);
     element.setAttribute("height", height);
+}
+/**
+ *
+ * @param {Screenshot[]} screenshots
+ *  @param {HTMLDivElement} previewDiv
+ */
+export function loadPreview(screenshots, previewDiv) {
+    screenshots.map((screenshot) => loadScreenshot(screenshot.bitmap, screenshot.id, previewDiv));
 }
 

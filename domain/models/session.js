@@ -1,4 +1,5 @@
 import { Folder } from "./folder.js";
+import { Note } from "./note.js";
 import { Screenshot } from "./screenshot.js";
 
 export class Session {
@@ -14,6 +15,8 @@ export class Session {
     parentFolderId;
     /** @type {string} */
     objectType;
+    /** @type {Note} */
+    note;
 
     /**
      * @param {string} name 
@@ -26,5 +29,7 @@ export class Session {
         this.screenshots = [];
         this.parentFolder = parentId;
         this.objectType = "session";
+        this.note;
+
     }
 }

@@ -1,5 +1,5 @@
 
-export function initLocalStorage() {
+export function getCurrentFolderId() {
     if (localStorage.getItem("folderId") == null) {
         localStorage.setItem("folderId", "home");
         return "home";

@@ -1,8 +1,11 @@
-import { Session } from "../models/session.js";
-import { Folder } from "../models/folder.js";
+import { Session } from "../../domain/models/session.js";
+import { Folder } from "../../domain/models/folder.js";
 import { saveSessionId, saveFolderId } from "./localStorage.js";
 import { putObjectInParent, createDivWith2Objects, createDivWith2ObjectsInParent } from "./htmlDivCreator.js";
 import { goToFolder, goToSession } from "./navigator.js";
+import { currentFolderId } from "../../init.js";
+import { findFolderById } from "../../infrastructure/db/folderDb.js";
+import { HomeFolder } from "../../domain/models/homeFolder.js";
 
 export var smallVideoWidth = "200px";
 export var smallVideoHeight = "200px";
@@ -27,7 +30,7 @@ export function createTextField() {
  * @param {string} styleObject
  * @param {string} style
  */
-export function createSession(name, id, pfad, parentElement, styleObject, style) {
+export function loadSession(name, id, pfad, parentElement, styleObject, style) {
     const session = createHtmlFolderOrSession(name, id, pfad)
     session.querySelector("#e"+id).addEventListener("click", () => goToSession(session.id))
     putObjectInParent(session, parentElement)
@@ -72,14 +75,12 @@ function createHtmlFolderOrSession(name, id, pfad) {
  * @param {string} styleObject
  * @param {string} style
  */
-export function createFolder(name, id, pfad, parentElement, styleObject, style) {
+export function loadFolder(name, id, pfad, parentElement, styleObject, style) {
     const folder = createHtmlFolderOrSession(name, id, pfad)
     const btn = folder.querySelector("#e"+id);
-    console.log("btn", btn);
     btn.addEventListener("click", () => goToFolder(folder.id))
     putObjectInParent(folder, parentElement)
     styleFolder(folder, styleObject, style)
-    console.log("createFolder", folder);
     return folder;
 }
 
@@ -127,11 +128,10 @@ export function addEventListenerReadInput(textField) {
 /**
  *
  * @param {String} folderId
- * @param {HTMLElement} button
  */
-export function rmBackBtnIfHome(folderId, button) {
+export function rmBackBtnIfHome(folderId, btn) {
     if (folderId == "home") {
-        button.remove();
+        btn.remove();
     }
 }
 
@@ -201,13 +201,12 @@ export function createSidebarElement(element) {
 
 
 export function createSessionFolderBtns() {
-    console.log("2")
     const addBtnParentDiv = document.getElementById("addBtnDiv");
-    createHTMLCreateSessionBtn();
-    createHTMLCreateFolderBtn();
+    const createSessionBtn = createHTMLCreateSessionBtn();
+    const createFolderBtn =createHTMLCreateFolderBtn();
     createDivWith2ObjectsInParent(createHTMLCreateSessionBtn(),
-        createHTMLCreateFolderBtn(), addBtnParentDiv);
-    
+    createHTMLCreateFolderBtn(), addBtnParentDiv);
+    return {createSessionBtn: createSessionBtn, createFolderBtn: createFolderBtn}
 }
 
 
@@ -225,9 +224,64 @@ export function createSessionFolderBtns() {
     createFolderBtn.textContent = "create Folder"
     return createFolderBtn;
 }
-export function rmCreateFolderSessionBtn() {
-    document.getElementById("createSessionBtn").remove();
-    document.getElementById("createFolderBtn").remove();
+
+/**
+ * 
+ * @param {HTMLButtonElement} createSessionBtn 
+ * @param {HTMLButtonElement} createFolderBtn 
+ */
+export function rmCreateFolderSessionBtn(createSessionBtn, createFolderBtn) {
+    document.getElementById("createSessionBtn")
+    document.getElementById("createFolderBtn")
+  // createSessionBtn.remove();
+   //createFolderBtn.remove();
+}
+/**
+ *
+ * @param {Folder} folder
+ * @param {string} pfadFolder
+ * @param {string} pfadSession
+ *
+ */
+export function loadFoldersAndSessions(folder, pfadFolder, pfadSession) {
+    folder.folders.map((folder) => loadFolder(folder.name, folder.id, pfadFolder, document.getElementById("iconSpace"), folder.objectType, "iconSpace"));
+    folder.sessions.map((session) => loadSession(session.name, session.id, pfadSession, document.getElementById("iconSpace"), session.objectType, "iconSpace"));
+}
+
+export function loadSidebar() {
+    findFolderById("home").then((folder) => {createSidebarElement(folder)
+        loadItemsOf(folder);
+    });
+}
+/**
+ *
+ * @param {Folder} folder
+ */
+
+export function loadItemsOf(folder) {
+    findFolderById(folder.id).then((folder) => {
+        ;
+        folder.folders.map((folder) => {
+            createSidebarElement(folder);
+            loadItemsOf(folder);
+        });
+        folder.sessions.map((session) => {
+            createSidebarElement(session);
+        });
+    });
+}
+/**
+ *
+ * @param {string} title
+ */
+
+export function loadTitle(title) {
+    const titleElement = document.createElement('h1');
+    const header = document.getElementById("header");
+    titleElement.textContent = title;
+
+    titleElement.classList.add("title");
+    header.appendChild(titleElement);
 }
 
 

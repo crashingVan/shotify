@@ -1,9 +1,11 @@
 console.log("hallo");
 
-import { Session } from "../../../domain/models/session.js";
-import { findSessionById, getAll, initDB, saveSession } from "../../../infrastructure/db/initIndexedDb.js";
-import { Screenshot } from "../../../domain/models/screenshot.js";
-import { loadPreview, loadTitle } from "../../../ui/interface.js";
+import { Session } from "../../domain/models/session.js";
+import { getAll, initDB } from "../../infrastructure/db/initIndexedDb.js";
+import { findSessionById, saveSession } from "infrastructure/db/saveSession.js";
+import { Screenshot } from "../../domain/models/screenshot.js";
+import { loadPreview } from "application/services/canvas.js";
+import { loadTitle } from "application/services/htmlElement.js";
 import { loadScreenshot, videoMainView, videoPreview } from "../../services/canvas.js";
 import { saveFolderId } from "../../services/localStorage.js";
 
