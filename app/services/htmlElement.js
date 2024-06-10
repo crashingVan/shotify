@@ -2,6 +2,7 @@ import { Session } from "../models/session.js";
 import { Folder } from "../models/folder.js";
 import { saveSessionId, saveFolderId } from "./localStorage.js";
 import { putObjectInParent, createDivWith2Objects, createDivWith2ObjectsInParent } from "./htmlDivCreator.js";
+import { goToFolder, goToSession } from "./navigator.js";
 
 export var smallVideoWidth = "200px";
 export var smallVideoHeight = "200px";
@@ -28,6 +29,7 @@ export function createTextField() {
  */
 export function createSession(name, id, pfad, parentElement, styleObject, style) {
     const session = createHtmlFolderOrSession(name, id, pfad)
+    session.querySelector("#e"+id).addEventListener("click", () => goToSession(session.id))
     putObjectInParent(session, parentElement)
     styleFolder(session, styleObject, style)
     return session;
@@ -72,8 +74,12 @@ function createHtmlFolderOrSession(name, id, pfad) {
  */
 export function createFolder(name, id, pfad, parentElement, styleObject, style) {
     const folder = createHtmlFolderOrSession(name, id, pfad)
+    const btn = folder.querySelector("#e"+id);
+    console.log("btn", btn);
+    btn.addEventListener("click", () => goToFolder(folder.id))
     putObjectInParent(folder, parentElement)
     styleFolder(folder, styleObject, style)
+    console.log("createFolder", folder);
     return folder;
 }
 
@@ -84,7 +90,6 @@ export function createFolder(name, id, pfad, parentElement, styleObject, style) 
  * @param {string} style
  */
 function styleFolder(folder, styleObject, style) {
-    console.log("styleObject", styleObject)
     folder.querySelector("#n" + folder.id).classList.add(`${styleObject}` + `${style}` + "NameBtn");
     //nameBtn.classList.add("nameBtn");
 
@@ -219,6 +224,10 @@ export function createSessionFolderBtns() {
     createFolderBtn.id = "createFolderBtn"
     createFolderBtn.textContent = "create Folder"
     return createFolderBtn;
+}
+export function rmCreateFolderSessionBtn() {
+    document.getElementById("createSessionBtn").remove();
+    document.getElementById("createFolderBtn").remove();
 }
 
 

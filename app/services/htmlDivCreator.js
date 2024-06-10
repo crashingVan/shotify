@@ -25,11 +25,6 @@ function createDivWithObjectinParent(obj1, parent) {
     return div;
 }
 
-export function rmCreateFolderSessionBtn() {
-    document.getElementById("createSessionBtn").remove();
-    document.getElementById("createFolderBtn").remove();
-
-}
 /**
  *
  * @param {HTMLElement} obj1

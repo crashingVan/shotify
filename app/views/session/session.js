@@ -1,12 +1,10 @@
 console.log("hallo");
 
 import { Session } from "../../models/session.js";
-import { drawImage } from "../../services/canvas.js";
 import { findSessionById, getAll, initDB, saveSession } from "../../services/indexedDb.js";
 import { Screenshot } from "../../models/screenshot.js";
-import { createSessionView, createTitle } from "../../services/htmlView.js";
-import { videoMainView, videoPreview } from "app/services/canvas.js";
-import { loadScreenshot } from "app/services/canvas.js";
+import { loadPreview, loadTitle } from "../../services/htmlView.js";
+import { loadScreenshot, videoMainView, videoPreview } from "../../services/canvas.js";
 import { saveFolderId } from "../../services/localStorage.js";
 
 const videoElem = (/** @type {HTMLVideoElement} */ (document.getElementById("video")));
@@ -29,11 +27,10 @@ console.log("halloinitdb");
 initDB().then((database) => {
   db = database
   findSessionById(currentSessionId).then((session) => {
-    console.log("session",session);
+    console.log("session", session);
     currentSession = session
-    createTitle(session.name);
-    createSessionView(currentSession.screenshots, preview)
-
+    loadTitle(session.name);
+    loadPreview(currentSession.screenshots, preview)
   })
 });
 

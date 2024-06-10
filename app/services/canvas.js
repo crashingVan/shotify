@@ -1,7 +1,6 @@
-import { setElementSize } from "./canvas";
 
-import { calcScreenshotWidthHeight } from "./calc";
-import { smallVideoWidth, smallVideoHeight, bigVideoWidth, bigVideoHeight } from "./htmlElement";
+import { calcScreenshotWidthHeight } from "./calc.js";
+import { smallVideoWidth, smallVideoHeight, bigVideoWidth, bigVideoHeight } from "./htmlElement.js";
 
 /**
  * 
